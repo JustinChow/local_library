@@ -1,0 +1,22 @@
+<%- include('./header') %> 
+<%- include('./sidebar') %>
+
+<div class="col-sm-10">
+    <h1><%= title %> </h1>
+    <ul>
+        <% if (author_list.length === 0) { %>
+            <li>There are no authors.</li>
+        <% } else { %>
+            <% for( let index = 0; index < author_list.length; index++ ) { %>
+                <li>
+                    <a href=<%= author_list[index].url %>>
+                        <%= author_list[index].name %>
+                    </a> (<%= author_list[index].lifespan %>)
+                </li>
+            <% } %>
+        <% } %>
+       
+    </ul>
+</div>
+
+<%- include('./footer') %>

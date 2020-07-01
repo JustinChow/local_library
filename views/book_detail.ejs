@@ -1,0 +1,68 @@
+<%- include('./header') %> 
+<%- include('./sidebar') %>
+
+<div class="col-sm-10">
+    <h1>Genre: <%= book.title %> </h1>
+
+    <p>
+        <strong>Author: </strong>
+        <a href='<%= book.author.url %>'><%= book.author.name %> </a>
+    </p>
+
+    <p>
+        <strong>Summary: </strong>
+        <%= book.summary %> 
+    </p>
+
+    <p>
+        <strong>ISBN: </strong>
+        <%= book.isbn %> 
+    </p>
+
+    <p>
+        <strong>Genre: </strong>
+        <% for( let index = 0; index < book.genre.length; index++ ) { %>
+            <% let genre = book.genre[index] %> 
+            <a href='<%= genre.url %>'><%= genre.name %> </a>
+            <% if (index < book.genre.length - 1) { %>
+                ,
+            <% } %>
+        <% } %>
+    </p>
+
+    <div style='margin-left:20px;margin-top:20px'>
+        <h4>Copies</h4>
+        
+        <% if (book_instances.length == 0) { %>
+            <p>There are no copies of this book in the library.</p>
+        <% } else { %>
+            <% for( let index = 0; index < book_instances.length; index++ ) { %>
+                <% let book_instance = book_instances[index] %> 
+                <hr>
+                <% if (book_instance.status == 'Available') { %>
+                    <% var status_class = 'text-success'; %> 
+                <% } else if (book_instance.status == 'Maintenance') { %>
+                    <% var status_class = 'text-danger'; %> 
+                <% } else { %>
+                    <% var status_class = 'text-warning'; %> 
+                <% } %>
+    
+                <p class='<%= status_class %> '><%= book_instance.status %> </p> 
+    
+                <p><strong>Imprint: </strong><%= book_instance.imprint %> </p>
+    
+                <% if (book_instance.status != 'Available') { %>
+                    <p><strong>Due back:</strong><%= book_instance.due_back_formatted %> </p>
+                <% } %>
+    
+                <p><strong> Id: </strong><a href='<%= book_instance.url %>'><%= book_instance.id %></a></p>
+    
+            <% } %>
+        <% } %>
+        
+    </div>
+    
+
+</div>
+
+<%- include('./footer') %>

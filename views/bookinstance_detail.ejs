@@ -1,0 +1,36 @@
+<%- include('./header') %> 
+<%- include('./sidebar') %>
+
+<div class="col-sm-10">
+    <h1>ID: <%= bookinstance.id %> </h1>
+
+    <p>
+        <strong>Title: </strong>
+        <a href='<%= bookinstance.book.url %>'><%= bookinstance.book.title %></a>
+    </p>
+
+    <p>
+        <strong>Imprint: </strong>
+        <%= bookinstance.imprint %> 
+    </p>
+
+    <p>
+        <strong>Status: </strong>
+        <% if (bookinstance.status == 'Available') { %>
+            <% var status_class = 'text-success'; %>
+        <% } else if (bookinstance.status == 'Maintenance') { %>
+            <% var status_class = 'text-danger'; %>
+        <% } else { %>
+            <% var status_class = 'text-warning'; %> 
+        <% } %>
+
+        <span class='<%= status_class %> '><%= bookinstance.status %> </span>
+    </p>
+
+    <% if (bookinstance.status != 'Available') { %>
+        <p><strong>Due back: </strong><%= bookinstance.due_back_formatted %> </p>
+    <% } %>
+
+</div>
+
+<%- include('./footer') %>

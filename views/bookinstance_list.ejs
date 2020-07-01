@@ -1,0 +1,33 @@
+<%- include('./header') %> 
+<%- include('./sidebar') %>
+
+<div class="col-sm-10">
+    <h1><%= title %> </h1>
+    <ul>
+        <% if (bookinstance_list.length === 0) { %>
+            <li>There are no book copies in this library.</li>
+        <% } else { %>
+            <% for( let index = 0; index < bookinstance_list.length; index++ ) { %>
+                <li>
+                    <a href=<%= bookinstance_list[index].url %>>
+                        <%= bookinstance_list[index].book.title %> : <%= bookinstance_list[index].imprint %> (<%=  bookinstance_list[index].id %> )
+                    </a> - 
+                    <% if (bookinstance_list[index].status == 'Available') { %>
+                        <span class="text-success"><%= bookinstance_list[index].status %> </span>
+                    <% } else if (bookinstance_list[index].status == 'Maintenance') { %>
+                        <span class="text-danger"><%= bookinstance_list[index].status %> </span>
+                    <% } else { %>
+                        <span class="text-warning"><%= bookinstance_list[index].status %> </span>
+                    <% } %>
+
+                    <% if (bookinstance_list[index].status != 'Available') { %>
+                     <span>(Due: <%= bookinstance_list[index].due_back_formatted %>)</span>
+                    <% } %>
+                </li>
+            <% } %>
+        <% } %>
+       
+    </ul>
+</div>
+
+<%- include('./footer') %>

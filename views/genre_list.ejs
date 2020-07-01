@@ -1,0 +1,22 @@
+<%- include('./header') %> 
+<%- include('./sidebar') %>
+
+<div class="col-sm-10">
+    <h1><%= title %> </h1>
+    <ul>
+        <% if (genre_list.length === 0) { %>
+            <li>There are no genres.</li>
+        <% } else { %>
+            <% for( let index = 0; index < genre_list.length; index++ ) { %>
+                <li>
+                    <a href=<%= genre_list[index].url %>>
+                        <%= genre_list[index].name %>
+                    </a>
+                </li>
+            <% } %>
+        <% } %>
+       
+    </ul>
+</div>
+
+<%- include('./footer') %>
