@@ -1,4 +1,7 @@
-var BookInstance = require('../models/bookinstance');
+const BookInstance = require('../models/bookinstance');
+const Book = require('../models/book');
+
+const { body, validationResult } = require('express-validator/check');
 
 // Display list of all BookInstances.
 exports.bookinstance_list = function(req, res, next) {
@@ -32,14 +35,64 @@ exports.bookinstance_detail = function(req, res, next) {
 };
 
 // Display BookInstance create form on GET.
-exports.bookinstance_create_get = function(req, res) {
-    res.send('NOT IMPLEMENTED: BookInstance create GET');
+exports.bookinstance_create_get = function(req, res, next) {       
+
+    Book.find({},'title')
+    .exec(function (err, books) {
+      if (err) { return next(err); }
+      // Successful, so render.
+      res.render('bookinstance_form', {title: 'Create BookInstance', book_list: books});
+    });
+    
 };
 
 // Handle BookInstance create on POST.
-exports.bookinstance_create_post = function(req, res) {
-    res.send('NOT IMPLEMENTED: BookInstance create POST');
-};
+exports.bookinstance_create_post = [
+
+    // Validate and sanitize fields.
+    body('book', 'Book must be specified').trim().isLength({ min: 1 }).escape(),
+    body('imprint', 'Imprint must be specified').trim().isLength({ min: 1 }).escape(),
+    body('due_back', 'Invalid date').optional({ checkFalsy: true }).isISO8601().escape(),
+    body('status').trim().escape(),
+    
+    // Process request after validation and sanitization.
+    (req, res, next) => {
+
+        // Extract the validation errors from a request.
+        const errors = validationResult(req);
+
+        console.log(req.body.due_back);
+
+        // Create a BookInstance object with escaped and trimmed data.
+        var bookinstance = new BookInstance(
+          { book: req.body.book,
+            imprint: req.body.imprint,
+            status: req.body.status,
+            // Time added to prevent timezone issues with ISO 8601 
+            // https://stackoverflow.com/questions/2587345/why-does-date-parse-give-incorrect-results
+            due_back: req.body.due_back + 'T00:00:00'
+           });
+
+        if (!errors.isEmpty()) {
+            // There are errors. Render form again with sanitized values and error messages.
+            Book.find({},'title')
+                .exec(function (err, books) {
+                    if (err) { return next(err); }
+                    // Successful, so render.
+                    res.render('bookinstance_form', { title: 'Create BookInstance', book_list: books, selected_book: bookinstance.book._id , errors: errors.array(), bookinstance: bookinstance });
+            });
+            return;
+        }
+        else {
+            // Data from form is valid.
+            bookinstance.save(function (err) {
+                if (err) { return next(err); }
+                   // Successful - redirect to new record.
+                   res.redirect(bookinstance.url);
+                });
+        }
+    }
+];
 
 // Display BookInstance delete form on GET.
 exports.bookinstance_delete_get = function(req, res) {

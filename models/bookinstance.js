@@ -22,5 +22,10 @@ BookInstanceSchema.virtual('due_back_formatted').get(function () {
   return moment(this.due_back).format('MMMM Do, YYYY');
 });
 
+// Virtual for fomatted due date string YYYY-MM-DD
+BookInstanceSchema.virtual('due_back_yyyy_mm_dd').get(function () {
+  return moment(this.due_back).format('YYYY-MM-DD');
+});
+
 // Export model
 module.exports = mongoose.model('BookInstance', BookInstanceSchema);
