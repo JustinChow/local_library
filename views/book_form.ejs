@@ -22,7 +22,8 @@
                 <% for ( let i = 0; i < authors.length; i++ ) { %>
                     <% author = authors[i]; %>
                     <% if (locals.book) { %>
-                        <option value='<%= author._id %>' <%= author._id.toString() == book.author ? 'selected' : '' %>>
+                        <%# Handle GET form, where book.author is an object, and POST form, where it is a string. %> 
+                        <option value='<%= author._id %>' <%= author.id == book.author.id || author.id == book.author ? 'selected' : '' %>>
                             <%= author.name %> 
                         </option>
                     <% } else { %>
