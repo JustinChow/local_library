@@ -19,7 +19,6 @@ else {
   var config = require('./config');
   mongoDB = config.mongodb_url;
 }
-var config = require('./config');
 
 var app = express();
 
