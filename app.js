@@ -10,6 +10,15 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var catalogRouter = require('./routes/catalog');
 
+// Use environment variable in production, otherwise use config file
+var mongoDB = null;
+if (process.env.MONGODB_URI) {
+  mongoDB = process.env.MONGODB_URI
+}
+else {
+  var config = require('./config');
+  mongoDB = config.mongodb_url;
+}
 var config = require('./config');
 
 var app = express();
@@ -17,7 +26,7 @@ var app = express();
 
 // set up mongoose connection
 var mongoose = require('mongoose');
-var mongoDB = process.env.MONGODB_URI || config.mongodb_url;
+var mongoDB = mongoDB;
 mongoose.connect(mongoDB, { UseNewUrlParser: true});
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
